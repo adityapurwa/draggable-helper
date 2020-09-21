@@ -1,25 +1,34 @@
 {
-  "name": "draggable-helper",
-  "version": "5.0.3",
+  "name": "@adityapurwa/draggable-helper",
+  "version": "5.0.4",
   "description": "To simplify drag and drop.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "scripts": {
     "compile-scripts": "tsc --target ES6 --module CommonJS scripts/build.ts",
     "build": "rollup -c scripts/build.js & node scripts/build.js --report",
     "watch": "rollup -c scripts/build.js --watch"
   },
   "author": "phphe <phphe@outlook.com> (https://github.com/phphe)",
+  "contributors": [
+    {
+      "name": "Aditya Purwa",
+      "url": "https://github.com/adityapurwa"
+    }
+  ],
   "unpkg": "dist/draggable-helper.js",
   "bugs": {
     "url": "https://github.com/phphe/draggable-helper/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/phphe/draggable-helper.git"
+    "url": "https://github.com/adityapurwa/draggable-helper.git"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.10.1",

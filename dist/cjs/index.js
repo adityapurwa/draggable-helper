@@ -1,5 +1,5 @@
 /*!
- * draggable-helper v5.0.3
+ * draggable-helper v5.0.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
@@ -13,9 +13,9 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var hp = require('helper-js');
 var DragEventService = _interopDefault(require('drag-event-service'));
 
-function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 /* Default export, a function.
@@ -200,7 +200,7 @@ function index (listenerElement) {
       opt.onmousemove && opt.onmousemove(e);
     } else {
       opt.ontouchmove && opt.ontouchmove(e);
-    } // 
+    } //
 
 
     var _store = store,
@@ -243,6 +243,12 @@ function index (listenerElement) {
 
 
       var movedElement = opt.clone ? movedOrClonedElement.cloneNode(true) : movedOrClonedElement;
+
+      if (opt.clone) {
+        store.remnantElement = movedOrClonedElement;
+        store.remnantElement.classList.add(opt.remnantClassName);
+      }
+
       var initialPosition = hp.getViewportPosition(movedOrClonedElement); // attach elements and initialPosition to store
       // 附加元素和初始位置到store
 
@@ -262,7 +268,7 @@ function index (listenerElement) {
           width: "".concat(Math.ceil(size.width), "px"),
           height: "".concat(Math.ceil(size.height), "px"),
           zIndex: 9999,
-          opacity: 0.8,
+          opacity: 1,
           position: 'fixed',
           left: initialPosition.x + 'px',
           top: initialPosition.y + 'px',
@@ -341,7 +347,11 @@ function index (listenerElement) {
 
 
   var onMouseupOrTouchEnd = function onMouseupOrTouchEnd(e) {
-    // execute native event hooks
+    if (opt.clone && store.remnantElement) {
+      store.remnantElement.classList.remove(opt.remnantClassName);
+    } // execute native event hooks
+
+
     if (!DragEventService.isTouch(e)) {
       opt.onmousedown && opt.onmousedown(e);
     } else {
@@ -355,7 +365,7 @@ function index (listenerElement) {
         passive: false
       }]
     });
-    DragEventService.off(window, 'end', onMouseupOrTouchEnd); // 
+    DragEventService.off(window, 'end', onMouseupOrTouchEnd); //
 
     if (store.movedCount === 0) {
       return;
@@ -400,7 +410,7 @@ function index (listenerElement) {
       }]
     });
     DragEventService.on(window, 'end', onMouseupOrTouchEnd);
-  }; // 
+  }; //
 
 
   return {
@@ -420,7 +430,8 @@ var defaultOptions = {
   preventTextSelection: true,
   edgeScrollTriggerMargin: 50,
   edgeScrollSpeed: 0.35,
-  edgeScrollTriggerMode: 'top_left_corner'
+  edgeScrollTriggerMode: 'top_left_corner',
+  remnantClassName: 'remnant'
 }; // Info after event triggered. Created when mousedown or touchstart, destroied after mouseup or touchend.
 // 事件触发后的相关信息. mousedown或touchstart时创建, mouseup或touchend后销毁.
 

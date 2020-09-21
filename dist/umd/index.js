@@ -1,5 +1,5 @@
 /*!
- * draggable-helper v5.0.3
+ * draggable-helper v5.0.4
  * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
  * Homepage: undefined
  * Released under the MIT License.
@@ -110,7 +110,7 @@
     if (typeof o === "string") return arrayLikeToArray(o, minLen);
     var n = Object.prototype.toString.call(o).slice(8, -1);
     if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(n);
+    if (n === "Map" || n === "Set") return Array.from(o);
     if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
   }
 
@@ -133,6 +133,24 @@
     var iteratorSymbol = $Symbol.iterator || "@@iterator";
     var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
     var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+    function define(obj, key, value) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+      return obj[key];
+    }
+    try {
+      // IE 8 has a broken Object.defineProperty that only works on DOM objects.
+      define({}, "");
+    } catch (err) {
+      define = function(obj, key, value) {
+        return obj[key] = value;
+      };
+    }
 
     function wrap(innerFn, outerFn, self, tryLocsList) {
       // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
@@ -204,16 +222,19 @@
       Generator.prototype = Object.create(IteratorPrototype);
     GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
     GeneratorFunctionPrototype.constructor = GeneratorFunction;
-    GeneratorFunctionPrototype[toStringTagSymbol] =
-      GeneratorFunction.displayName = "GeneratorFunction";
+    GeneratorFunction.displayName = define(
+      GeneratorFunctionPrototype,
+      toStringTagSymbol,
+      "GeneratorFunction"
+    );
 
     // Helper for defining the .next, .throw, and .return methods of the
     // Iterator interface in terms of a single ._invoke method.
     function defineIteratorMethods(prototype) {
       ["next", "throw", "return"].forEach(function(method) {
-        prototype[method] = function(arg) {
+        define(prototype, method, function(arg) {
           return this._invoke(method, arg);
-        };
+        });
       });
     }
 
@@ -232,9 +253,7 @@
         Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
       } else {
         genFun.__proto__ = GeneratorFunctionPrototype;
-        if (!(toStringTagSymbol in genFun)) {
-          genFun[toStringTagSymbol] = "GeneratorFunction";
-        }
+        define(genFun, toStringTagSymbol, "GeneratorFunction");
       }
       genFun.prototype = Object.create(Gp);
       return genFun;
@@ -504,7 +523,7 @@
     // unified ._invoke helper method.
     defineIteratorMethods(Gp);
 
-    Gp[toStringTagSymbol] = "Generator";
+    define(Gp, toStringTagSymbol, "Generator");
 
     // A Generator should always return itself as the iterator object when the
     // @@iterator function is called on it. Some browsers' implementations of the
@@ -872,7 +891,7 @@
   var toConsumableArray = _toConsumableArray;
 
   /*!
-   * helper-js v2.0.0
+   * helper-js v2.0.1
    * (c) phphe <phphe@outlook.com> (https://github.com/phphe)
    * Homepage: undefined
    * Released under the MIT License.
@@ -1245,9 +1264,9 @@
     };
   }
 
-  function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray$1(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+  function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray$1(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
-  function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(n); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
+  function _unsupportedIterableToArray$1(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray$1(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$1(o, minLen); }
 
   function _arrayLikeToArray$1(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
   /* Default export, a function.
@@ -1432,7 +1451,7 @@
         opt.onmousemove && opt.onmousemove(e);
       } else {
         opt.ontouchmove && opt.ontouchmove(e);
-      } // 
+      } //
 
 
       var _store = store,
@@ -1475,6 +1494,12 @@
 
 
         var movedElement = opt.clone ? movedOrClonedElement.cloneNode(true) : movedOrClonedElement;
+
+        if (opt.clone) {
+          store.remnantElement = movedOrClonedElement;
+          store.remnantElement.classList.add(opt.remnantClassName);
+        }
+
         var initialPosition = getViewportPosition(movedOrClonedElement); // attach elements and initialPosition to store
         // 附加元素和初始位置到store
 
@@ -1494,7 +1519,7 @@
             width: "".concat(Math.ceil(size.width), "px"),
             height: "".concat(Math.ceil(size.height), "px"),
             zIndex: 9999,
-            opacity: 0.8,
+            opacity: 1,
             position: 'fixed',
             left: initialPosition.x + 'px',
             top: initialPosition.y + 'px',
@@ -1573,7 +1598,11 @@
 
 
     var onMouseupOrTouchEnd = function onMouseupOrTouchEnd(e) {
-      // execute native event hooks
+      if (opt.clone && store.remnantElement) {
+        store.remnantElement.classList.remove(opt.remnantClassName);
+      } // execute native event hooks
+
+
       if (!DragEventService.isTouch(e)) {
         opt.onmousedown && opt.onmousedown(e);
       } else {
@@ -1587,7 +1616,7 @@
           passive: false
         }]
       });
-      DragEventService.off(window, 'end', onMouseupOrTouchEnd); // 
+      DragEventService.off(window, 'end', onMouseupOrTouchEnd); //
 
       if (store.movedCount === 0) {
         return;
@@ -1632,7 +1661,7 @@
         }]
       });
       DragEventService.on(window, 'end', onMouseupOrTouchEnd);
-    }; // 
+    }; //
 
 
     return {
@@ -1652,7 +1681,8 @@
     preventTextSelection: true,
     edgeScrollTriggerMargin: 50,
     edgeScrollSpeed: 0.35,
-    edgeScrollTriggerMode: 'top_left_corner'
+    edgeScrollTriggerMode: 'top_left_corner',
+    remnantClassName: 'remnant'
   }; // Info after event triggered. Created when mousedown or touchstart, destroied after mouseup or touchend.
   // 事件触发后的相关信息. mousedown或touchstart时创建, mouseup或touchend后销毁.
 

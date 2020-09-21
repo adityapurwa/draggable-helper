@@ -85,7 +85,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
           if (el === listenerElement) {
             return 'break'
           }
-        }, {withSelf: true}) 
+        }, {withSelf: true})
         if (triggerElement) {
           break
         }
@@ -139,7 +139,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
     } else {
       opt.ontouchmove && opt.ontouchmove(<TouchEvent>e)
     }
-    // 
+    //
     const {movedOrClonedElement} = store
     // calc move and attach related info to store
     // 计算move并附加相关信息到store
@@ -175,6 +175,10 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
       }
       // resolve elements
       const movedElement = opt.clone ? movedOrClonedElement.cloneNode(true) as HTMLElement : movedOrClonedElement
+      if(opt.clone) {
+        store.remnantElement = movedOrClonedElement
+        store.remnantElement.classList.add(opt.remnantClassName)
+      }
       const initialPosition = hp.getViewportPosition(movedOrClonedElement)
       // attach elements and initialPosition to store
       // 附加元素和初始位置到store
@@ -182,6 +186,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
       store.movedElement = movedElement
       store.initialPositionRelativeToViewport = initialPosition
       store.initialPosition = initialPosition
+
       // define the function to update moved element style
       // 定义更新移动元素样式的方法
       const updateMovedElementStyle = () => {
@@ -193,7 +198,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
           width: `${Math.ceil(size.width)}px`,
           height: `${Math.ceil(size.height)}px`,
           zIndex: 9999,
-          opacity: 0.8,
+          opacity: 1,
           position: 'fixed',
           left: initialPosition.x + 'px',
           top: initialPosition.y + 'px',
@@ -231,7 +236,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
         store.updateMovedElementStyle()
       }
       _edgeScroll.afterFirstMove(store, opt)
-    } 
+    }
     // Not the first move
     // 非第一次移动
     else {
@@ -261,6 +266,9 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
   // define the event listener of mouseup and touchend
   // 定义mouseup和touchend事件监听器
   const onMouseupOrTouchEnd = (e: MouseOrTouchEvent) => {
+    if(opt.clone && store.remnantElement) {
+      store.remnantElement.classList.remove(opt.remnantClassName)
+    }
     // execute native event hooks
     if (!DragEventService.isTouch(e)) {
       opt.onmousedown && opt.onmousedown(<MouseEvent>e)
@@ -271,7 +279,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
     // 取消监听事件mousemove, touchmove, mouseup, touchend
     DragEventService.off(document, 'move', onMousemoveOrTouchMove, {touchArgs: [{passive: false}]})
     DragEventService.off(window, 'end', onMouseupOrTouchEnd)
-    // 
+    //
     if (store.movedCount === 0){
       return
     }
@@ -306,7 +314,7 @@ export default function (listenerElement: HTMLElement, opt:Options={}) {
     DragEventService.on(document, 'move', onMousemoveOrTouchMove, {touchArgs: [{passive: false}]})
     DragEventService.on(window, 'end', onMouseupOrTouchEnd)
   }
-  // 
+  //
   return {destroy, options: opt}
 }
 
@@ -324,6 +332,7 @@ export const defaultOptions = {
   edgeScrollTriggerMargin: 50,
   edgeScrollSpeed: 0.35,
   edgeScrollTriggerMode: 'top_left_corner',
+  remnantClassName: 'remnant'
 }
 export interface Options extends Partial<typeof defaultOptions>{
   triggerClassName?: string|string[] // triggerElement must have the class name.
@@ -354,6 +363,7 @@ export const initialStore = {
 }
 type InitialStore = typeof initialStore
 export interface Store extends InitialStore {
+  remnantElement: HTMLElement;
   listenerElement: HTMLElement
   directTriggerElement: HTMLElement // The element triggered event directly. 直接触发事件的元素
   triggerElement: HTMLElement // The element allowed to trigger event. Maybe the parent of directTriggerElement. 允许作为拖拽触发器的元素. 可能是directTriggerElement的父级.

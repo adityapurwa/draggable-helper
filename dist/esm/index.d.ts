@@ -14,6 +14,7 @@ export declare const defaultOptions: {
     edgeScrollTriggerMargin: number;
     edgeScrollSpeed: number;
     edgeScrollTriggerMode: string;
+    remnantClassName: string;
 };
 export interface Options extends Partial<typeof defaultOptions> {
     triggerClassName?: string | string[];
@@ -40,6 +41,7 @@ export declare const initialStore: {
 };
 declare type InitialStore = typeof initialStore;
 export interface Store extends InitialStore {
+    remnantElement: HTMLElement;
     listenerElement: HTMLElement;
     directTriggerElement: HTMLElement;
     triggerElement: HTMLElement;
