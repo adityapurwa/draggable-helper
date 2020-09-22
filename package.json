@@ -2,18 +2,17 @@
   "name": "@adityapurwa/draggable-helper",
   "version": "5.0.4",
   "description": "To simplify drag and drop.",
-  "main": "dist/cjs/index.js",
-  "module": "dist/esm/index.js",
+  "main": "dist/draggable-helper.cjs.js",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
   "scripts": {
-    "compile-scripts": "tsc --target ES6 --module CommonJS scripts/build.ts",
-    "build": "rollup -c scripts/build.js & node scripts/build.js --report",
-    "watch": "rollup -c scripts/build.js --watch"
+    "build": "rollup --config",
+    "watch": "rollup --config --watch"
   },
   "author": "phphe <phphe@outlook.com> (https://github.com/phphe)",
   "contributors": [
@@ -22,7 +21,6 @@
       "url": "https://github.com/adityapurwa"
     }
   ],
-  "unpkg": "dist/draggable-helper.js",
   "bugs": {
     "url": "https://github.com/phphe/draggable-helper/issues"
   },
@@ -32,6 +30,9 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.10.1",
+    "@rollup/plugin-babel": "^5.2.1",
+    "@rollup/plugin-typescript": "^6.0.0",
+    "prettier": "^2.1.2",
     "rogo": "^2.0.2",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.9.5"
