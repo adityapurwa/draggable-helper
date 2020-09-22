@@ -130,26 +130,6 @@ function _createForOfIteratorHelper(o, allowArrayLike) {
   };
 }
 
-/* Default export, a function.
-```js
-import draggableHelper from 'draggable-helper'
-draggableHelper(listenerElement, options)
-```
-Arguments:
-  listenerElement: HTMLElement. The element to bind mouse and touch event listener.
-  options: Options. Optional.
- */
-
-/* 默认导出, 一个方法.
-```js
-import draggableHelper from 'draggable-helper'
-draggableHelper(listenerElement, options)
-```
-参数:
-  listenerElement: HTMLElement. 绑定鼠标和触摸事件监听器的HTML元素.
-  options: Options. 可选.
- */
-
 var _edgeScroll = {
   afterFirstMove: function afterFirstMove(store, opt) {},
   afterMove: function afterMove(store, opt) {},
@@ -158,10 +138,8 @@ var _edgeScroll = {
 function index (listenerElement) {
   var opt = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   var store; // set default value of options
-  // 设置options的默认值
 
   hp.objectAssignIfKeyNull(opt, defaultOptions); // define the event listener of mousedown and touchstart
-  // 定义mousedown和touchstart事件监听器
 
   var onMousedownOrTouchStart = function onMousedownOrTouchStart(e, mouse) {
     // execute native event hooks
@@ -172,12 +150,10 @@ function index (listenerElement) {
     }
 
     var target = e.target; // check if triggered by ignore tags
-    // 检查是否由忽略的标签名触发
 
     if (opt.ingoreTags.includes(target.tagName)) {
       return;
     } // check if trigger element and its parent has undraggable class name
-    // 检查触发事件的元素和其与element之间的父级是否有不允许拖动的类名
 
 
     if (hp.hasClass(target, opt.undraggableClassName)) {
@@ -190,14 +166,13 @@ function index (listenerElement) {
       }
 
       if (el === listenerElement) {
-        return 'break';
+        return "break";
       }
     });
 
     if (isParentUndraggable) {
       return;
     } // Initialize store. Store start event, initial position
-    // 初始化store. 存储开始事件, 事件触发坐标
 
 
     store = JSON.parse(JSON.stringify(initialStore));
@@ -231,7 +206,7 @@ function index (listenerElement) {
             }
 
             if (el === listenerElement) {
-              return 'break';
+              return "break";
             }
           }, {
             withSelf: true
@@ -272,39 +247,32 @@ function index (listenerElement) {
     if (triggerElementIsMovedOrClonedElement) {
       store.triggerElement = store.movedOrClonedElement;
     } // check if trigger element is same with directTriggerElement when options.triggerBySelf is true
-    // options.triggerBySelf为true时, 检查触发事件的元素是否是允许触发的元素
 
 
     if (opt.triggerBySelf && store.triggerElement !== store.directTriggerElement) {
       return;
     } // prevent text be selected
-    // 阻止文字被选中
 
 
     if (!DragEventService.isTouch(e)) {
       // Do not prevent when touch. Or the elements within the node can not trigger click event.
-      // 不要在触摸时阻止事件. 否则将导致节点内的元素不触发点击事件.
       if (opt.preventTextSelection) {
         e.preventDefault();
       }
     } // listen mousemove and touchmove
-    // 监听mousemove和touchmove
 
 
-    DragEventService.on(document, 'move', onMousemoveOrTouchMove, {
+    DragEventService.on(document, "move", onMousemoveOrTouchMove, {
       touchArgs: [{
         passive: false
       }]
     }); // listen mouseup and touchend
-    // 监听mouseup和touchend
 
-    DragEventService.on(window, 'end', onMouseupOrTouchEnd);
+    DragEventService.on(window, "end", onMouseupOrTouchEnd);
   }; // bind mousedown or touchstart event listener
-  // 绑定mousedown和touchstart事件监听器
 
 
-  DragEventService.on(listenerElement, 'start', onMousedownOrTouchStart); // define the event listener of mousemove and touchmove
-  // 定义mousemove和touchmove事件监听器
+  DragEventService.on(listenerElement, "start", onMousedownOrTouchStart); // define the event listener of mousemove and touchmove
 
   var onMousemoveOrTouchMove = function onMousemoveOrTouchMove(e, mouse) {
     // execute native event hooks
@@ -317,7 +285,6 @@ function index (listenerElement) {
 
     var _store = store,
         movedOrClonedElement = _store.movedOrClonedElement; // calc move and attach related info to store
-    // 计算move并附加相关信息到store
 
     var move = store.move = {
       x: mouse.clientX - store.initialMouse.clientX,
@@ -328,21 +295,17 @@ function index (listenerElement) {
 
     if (DragEventService.isTouch(e)) {
       // prevent page scroll when touch.
-      // 当触摸时阻止屏幕被拖动.
       e.preventDefault();
     } else {
       // prevent text be selected
-      // 阻止文字被选中
       if (opt.preventTextSelection) {
         e.preventDefault();
       }
     } // first move
-    // 第一次移动
 
 
     if (store.movedCount === 0) {
       // check if min displacement exceeded.
-      // 检查是否达到最小位移
       if (opt.minDisplacement) {
         var x2 = Math.pow(move.x, 2);
         var y2 = Math.pow(move.y, 2);
@@ -362,13 +325,11 @@ function index (listenerElement) {
       }
 
       var initialPosition = hp.getViewportPosition(movedOrClonedElement); // attach elements and initialPosition to store
-      // 附加元素和初始位置到store
 
       store.movedOrClonedElement = movedOrClonedElement;
       store.movedElement = movedElement;
       store.initialPositionRelativeToViewport = initialPosition;
       store.initialPosition = initialPosition; // define the function to update moved element style
-      // 定义更新移动元素样式的方法
 
       var updateMovedElementStyle = function updateMovedElementStyle() {
         if (opt.clone) {
@@ -380,32 +341,27 @@ function index (listenerElement) {
           width: "".concat(Math.ceil(size.width), "px"),
           height: "".concat(Math.ceil(size.height), "px"),
           zIndex: 9999,
-          opacity: 1,
-          position: 'fixed',
-          left: initialPosition.x + 'px',
-          top: initialPosition.y + 'px',
-          pointerEvents: 'none'
+          opacity: 0.8,
+          position: "fixed",
+          left: initialPosition.x + "px",
+          top: initialPosition.y + "px",
+          pointerEvents: "none"
         };
-        hp.backupAttr(movedElement, 'style');
+        hp.backupAttr(movedElement, "style");
 
         for (var key in style) {
           movedElement.style[key] = style[key];
         }
 
-        hp.backupAttr(movedElement, 'class');
+        hp.backupAttr(movedElement, "class");
         hp.addClass(movedElement, opt.draggingClassName);
-        /*
-        check if the changed position is expected and correct it. about stacking context.
-        当某父元素使用了transform属性时, fixed不再以窗口左上角为坐标. 以下功能是在第一次移动后, 检查元素实际位置和期望位置是否相同, 不同则说明坐标系不是期望的. 则把初始位置减去偏移, 无论任何父元素导致了层叠上下文问题, 都能正确显示.
-        */
-
         var nowPosition = hp.getViewportPosition(movedElement);
 
         if (nowPosition.x !== initialPosition.x) {
           initialPosition.x = initialPosition.x - (nowPosition.x - initialPosition.x);
           initialPosition.y = initialPosition.y - (nowPosition.y - initialPosition.y);
-          movedElement.style.left = initialPosition.x + 'px';
-          movedElement.style.top = initialPosition.y + 'px';
+          movedElement.style.left = initialPosition.x + "px";
+          movedElement.style.top = initialPosition.y + "px";
         }
       };
 
@@ -418,7 +374,6 @@ function index (listenerElement) {
       if (opt.beforeMove && opt.beforeMove(store, opt) === false) {
         return;
       } // try to update moved element style
-      // 尝试更新移动元素样式
 
 
       if (!opt.updateMovedElementStyleManually) {
@@ -427,14 +382,12 @@ function index (listenerElement) {
 
       _edgeScroll.afterFirstMove(store, opt);
     } // Not the first move
-    // 非第一次移动
     else {
         // define the function to update moved element style
-        // 定义更新移动元素样式的方法
         var _updateMovedElementStyle = function _updateMovedElementStyle() {
           Object.assign(store.movedElement.style, {
-            left: store.initialPosition.x + move.x + 'px',
-            top: store.initialPosition.y + move.y + 'px'
+            left: store.initialPosition.x + move.x + "px",
+            top: store.initialPosition.y + move.y + "px"
           });
         };
 
@@ -443,7 +396,6 @@ function index (listenerElement) {
         if (opt.beforeMove && opt.beforeMove(store, opt) === false) {
           return;
         } // try to update moved element style
-        // 尝试更新移动元素样式
 
 
         if (!opt.updateMovedElementStyleManually) {
@@ -455,7 +407,6 @@ function index (listenerElement) {
 
     store.movedCount++;
   }; // define the event listener of mouseup and touchend
-  // 定义mouseup和touchend事件监听器
 
 
   var onMouseupOrTouchEnd = function onMouseupOrTouchEnd(e) {
@@ -469,15 +420,14 @@ function index (listenerElement) {
     } else {
       opt.ontouchend && opt.ontouchend(e);
     } // cancel listening mousemove, touchmove, mouseup, touchend
-    // 取消监听事件mousemove, touchmove, mouseup, touchend
 
 
-    DragEventService.off(document, 'move', onMousemoveOrTouchMove, {
+    DragEventService.off(document, "move", onMousemoveOrTouchMove, {
       touchArgs: [{
         passive: false
       }]
     });
-    DragEventService.off(window, 'end', onMouseupOrTouchEnd); //
+    DragEventService.off(window, "end", onMouseupOrTouchEnd); //
 
     if (store.movedCount === 0) {
       return;
@@ -486,11 +436,10 @@ function index (listenerElement) {
     store.endEvent = e;
     var _store2 = store,
         movedElement = _store2.movedElement; // define the function to update moved element style
-    // 定义更新移动元素样式的方法
 
     var updateMovedElementStyle = function updateMovedElementStyle() {
-      hp.restoreAttr(movedElement, 'style');
-      hp.restoreAttr(movedElement, 'class');
+      hp.restoreAttr(movedElement, "style");
+      hp.restoreAttr(movedElement, "class");
 
       if (opt.clone) {
         movedElement.parentElement.removeChild(movedElement);
@@ -502,7 +451,6 @@ function index (listenerElement) {
     if (opt.beforeDrop && opt.beforeDrop(store, opt) === false) {
       return;
     } // try to update moved element style
-    // 尝试更新移动元素样式
 
 
     if (!opt.updateMovedElementStyleManually) {
@@ -511,17 +459,16 @@ function index (listenerElement) {
 
     _edgeScroll.afterDrop(store, opt);
   }; // define the destroy function
-  // 定义销毁/退出的方法
 
 
   var destroy = function destroy() {
-    DragEventService.off(listenerElement, 'start', onMousedownOrTouchStart);
-    DragEventService.on(document, 'move', onMousemoveOrTouchMove, {
+    DragEventService.off(listenerElement, "start", onMousedownOrTouchStart);
+    DragEventService.on(document, "move", onMousemoveOrTouchMove, {
       touchArgs: [{
         passive: false
       }]
     });
-    DragEventService.on(window, 'end', onMouseupOrTouchEnd);
+    DragEventService.on(window, "end", onMouseupOrTouchEnd);
   }; //
 
 
@@ -530,14 +477,13 @@ function index (listenerElement) {
     options: opt
   };
 } // available options and default options value
-// 可用选项和默认选项值
 
 var defaultOptions = {
-  ingoreTags: ['INPUT', 'TEXTAREA', 'SELECT', 'OPTGROUP', 'OPTION'],
-  undraggableClassName: 'undraggable',
+  ingoreTags: ["INPUT", "TEXTAREA", "SELECT", "OPTGROUP", "OPTION"],
+  undraggableClassName: "undraggable",
   minDisplacement: 10,
   // The minimum displacement that triggers the drag. 触发拖动的最小位移.
-  draggingClassName: 'dragging',
+  draggingClassName: "dragging",
   // Be added to the dragged element. 将被添加到被拖动的元素.
   clone: false,
   // Whether to clone element when drag.
@@ -546,16 +492,14 @@ var defaultOptions = {
   preventTextSelection: true,
   edgeScrollTriggerMargin: 50,
   edgeScrollSpeed: 0.35,
-  edgeScrollTriggerMode: 'top_left_corner',
-  remnantClassName: 'remnant'
+  edgeScrollTriggerMode: "top_left_corner",
+  remnantClassName: "remnant"
 };
 // Info after event triggered. Created when mousedown or touchstart, destroied after mouseup or touchend.
-// 事件触发后的相关信息. mousedown或touchstart时创建, mouseup或touchend后销毁.
 var initialStore = {
   movedCount: 0
 };
 // edge scroll
-// 边缘滚动
 var stopHorizontalScroll, stopVerticalScroll;
 
 _edgeScroll.afterMove = function (store, opt) {
@@ -571,14 +515,13 @@ _edgeScroll.afterMove = function (store, opt) {
     y: store.mouse.clientY
   };
 
-  if (opt.edgeScrollTriggerMode === 'top_left_corner') {
+  if (opt.edgeScrollTriggerMode === "top_left_corner") {
     var vp = hp.getViewportPosition(store.movedElement);
     triggerPoint = {
       x: vp.x,
       y: vp.y
     };
   } // find the scrollable parent elements
-  // 寻找可滚动的父系元素
 
 
   var foundHorizontal, foundVertical, prevElement, horizontalDir, verticalDir;
@@ -593,25 +536,24 @@ _edgeScroll.afterMove = function (store, opt) {
 
       if (prevElement && !hp.isDescendantOf(prevElement, itemEl)) {
         // itemEl is being covered by other elements
-        // itemEl被其他元素遮挡
         continue;
       }
 
-      var t = 10; // min scrollable displacement. 最小可滚动距离, 小于此距离不触发滚动.
+      var t = 10; // min scrollable displacement
 
       if (!foundHorizontal) {
         if (itemEl.scrollWidth > itemEl.clientWidth) {
           var _vp = fixedGetViewportPosition(itemEl);
 
           if (triggerPoint.x <= _vp.left + margin) {
-            if (scrollableDisplacement(itemEl, 'left') > t && isScrollable(itemEl, 'x')) {
+            if (scrollableDisplacement(itemEl, "left") > t && isScrollable(itemEl, "x")) {
               foundHorizontal = itemEl;
-              horizontalDir = 'left';
+              horizontalDir = "left";
             }
           } else if (triggerPoint.x >= _vp.left + itemEl.clientWidth - margin) {
-            if (scrollableDisplacement(itemEl, 'right') > t && isScrollable(itemEl, 'x')) {
+            if (scrollableDisplacement(itemEl, "right") > t && isScrollable(itemEl, "x")) {
               foundHorizontal = itemEl;
-              horizontalDir = 'right';
+              horizontalDir = "right";
             }
           }
         }
@@ -622,14 +564,14 @@ _edgeScroll.afterMove = function (store, opt) {
           var _vp2 = fixedGetViewportPosition(itemEl);
 
           if (triggerPoint.y <= _vp2.top + margin) {
-            if (scrollableDisplacement(itemEl, 'up') > t && isScrollable(itemEl, 'y')) {
+            if (scrollableDisplacement(itemEl, "up") > t && isScrollable(itemEl, "y")) {
               foundVertical = itemEl;
-              verticalDir = 'up';
+              verticalDir = "up";
             }
           } else if (triggerPoint.y >= _vp2.top + itemEl.clientHeight - margin) {
-            if (scrollableDisplacement(itemEl, 'down') > t && isScrollable(itemEl, 'y')) {
+            if (scrollableDisplacement(itemEl, "down") > t && isScrollable(itemEl, "y")) {
               foundVertical = itemEl;
-              verticalDir = 'down';
+              verticalDir = "down";
             }
           }
         }
@@ -649,37 +591,36 @@ _edgeScroll.afterMove = function (store, opt) {
   }
 
   if (foundHorizontal) {
-    if (horizontalDir === 'left') {
+    if (horizontalDir === "left") {
       stopHorizontalScroll = hp.scrollTo({
         x: 0,
         element: foundHorizontal,
-        duration: scrollableDisplacement(foundHorizontal, 'left') / opt.edgeScrollSpeed
+        duration: scrollableDisplacement(foundHorizontal, "left") / opt.edgeScrollSpeed
       });
     } else {
       stopHorizontalScroll = hp.scrollTo({
         x: foundHorizontal.scrollWidth - foundHorizontal.clientWidth,
         element: foundHorizontal,
-        duration: scrollableDisplacement(foundHorizontal, 'right') / opt.edgeScrollSpeed
+        duration: scrollableDisplacement(foundHorizontal, "right") / opt.edgeScrollSpeed
       });
     }
   }
 
   if (foundVertical) {
-    if (verticalDir === 'up') {
+    if (verticalDir === "up") {
       stopVerticalScroll = hp.scrollTo({
         y: 0,
         element: foundVertical,
-        duration: scrollableDisplacement(foundVertical, 'up') / opt.edgeScrollSpeed
+        duration: scrollableDisplacement(foundVertical, "up") / opt.edgeScrollSpeed
       });
     } else {
       stopVerticalScroll = hp.scrollTo({
         y: foundVertical.scrollHeight - foundVertical.clientHeight,
         element: foundVertical,
-        duration: scrollableDisplacement(foundVertical, 'down') / opt.edgeScrollSpeed
+        duration: scrollableDisplacement(foundVertical, "down") / opt.edgeScrollSpeed
       });
     }
   } // is element scrollable in a direction
-  // 元素某方向是否可滚动
 
 
   function isScrollable(el, dir) {
@@ -689,22 +630,21 @@ _edgeScroll.afterMove = function (store, opt) {
     var special = document.scrollingElement || document.documentElement;
 
     if (el === special) {
-      return style[key] === 'visible' || style[key] === 'auto' || style[key] === 'scroll';
+      return style[key] === "visible" || style[key] === "auto" || style[key] === "scroll";
     }
 
-    return style[key] === 'auto' || style[key] === 'scroll';
+    return style[key] === "auto" || style[key] === "scroll";
   } // scrollable displacement of element  in a direction
-  // 元素某方向可滚动距离
 
 
   function scrollableDisplacement(el, dir) {
-    if (dir === 'up') {
+    if (dir === "up") {
       return el.scrollTop;
-    } else if (dir === 'down') {
+    } else if (dir === "down") {
       return el.scrollHeight - el.scrollTop - el.clientHeight;
-    } else if (dir === 'left') {
+    } else if (dir === "left") {
       return el.scrollLeft;
-    } else if (dir === 'right') {
+    } else if (dir === "right") {
       return el.scrollWidth - el.scrollLeft - el.clientWidth;
     }
   }
@@ -730,7 +670,6 @@ _edgeScroll.afterDrop = function (store, opt) {
 
   stopOldScrollAnimation();
 }; // stop old scroll animation
-// 结束之前的滚动动画
 
 
 function stopOldScrollAnimation() {

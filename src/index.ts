@@ -183,7 +183,7 @@ export default function (listenerElement: HTMLElement, opt: Options = {}) {
           width: `${Math.ceil(size.width)}px`,
           height: `${Math.ceil(size.height)}px`,
           zIndex: 9999,
-          opacity: 1,
+          opacity: 0.8,
           position: "fixed",
           left: initialPosition.x + "px",
           top: initialPosition.y + "px",
