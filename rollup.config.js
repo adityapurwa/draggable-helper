@@ -1,4 +1,4 @@
-import babel from '@rollup/plugin-babel';
+import babel from "@rollup/plugin-babel";
 
 export default {
     input: 'src/index.ts',
@@ -7,7 +7,6 @@ export default {
         format: 'cjs'
     },
     plugins: [
-        // ts(),
         babel({
             exclude: 'node_modules/**',
             extensions: ['.ts', '.js']
