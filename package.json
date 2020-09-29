@@ -1,6 +1,6 @@
 {
   "name": "@adityapurwa/draggable-helper",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "To simplify drag and drop.",
   "main": "dist/draggable-helper.cjs.js",
   "types": "dist/index.d.ts",

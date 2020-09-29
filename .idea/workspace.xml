@@ -3,10 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4e758ab5-1b54-4c91-b81a-6d607a056d0f" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/draggable-helper.cjs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/draggable-helper.cjs.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/draggable-helper.cjs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rollup.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/rollup.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +52,8 @@
       <updated>1600735121284</updated>
       <workItem from="1600735121881" duration="1756000" />
       <workItem from="1600785775893" duration="965000" />
-      <workItem from="1600838989043" duration="1129000" />
+      <workItem from="1600838989043" duration="1932000" />
+      <workItem from="1601376660679" duration="3922000" />
     </task>
     <servers />
   </component>
@@ -69,5 +69,9 @@
       <screen x="0" y="25" width="1792" height="1020" />
     </state>
     <state x="634" y="286" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.25.1792.1020@0.25.1792.1020" timestamp="1600735288401" />
+    <state x="597" y="290" width="597" height="490" key="find.popup" timestamp="1601385078549">
+      <screen x="0" y="25" width="1792" height="1020" />
+    </state>
+    <state x="597" y="290" width="597" height="490" key="find.popup/0.25.1792.1020@0.25.1792.1020" timestamp="1601385078549" />
   </component>
 </project>

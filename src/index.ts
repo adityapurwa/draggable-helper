@@ -150,6 +150,7 @@ export default function (listenerElement: HTMLElement, opt: Options = {}) {
     // first move
     if (store.movedCount === 0) {
       // check if min displacement exceeded.
+      console.log(opt.minDisplacement);
       if (opt.minDisplacement) {
         const x2 = Math.pow(move.x, 2);
         const y2 = Math.pow(move.y, 2);
@@ -301,12 +302,12 @@ export default function (listenerElement: HTMLElement, opt: Options = {}) {
 export const defaultOptions = {
   ingoreTags: ["INPUT", "TEXTAREA", "SELECT", "OPTGROUP", "OPTION"],
   undraggableClassName: "undraggable",
-  minDisplacement: 10, // The minimum displacement that triggers the drag. 触发拖动的最小位移.
+  minDisplacement: 20, // The minimum displacement that triggers the drag. 触发拖动的最小位移.
   draggingClassName: "dragging", // Be added to the dragged element. 将被添加到被拖动的元素.
   clone: false, // Whether to clone element when drag.
   updateMovedElementStyleManually: false, // If true, you may need to call store.updateMovedElementStyle in beforeFirstMove, beforeMove, beforeDrop
   preventTextSelection: true,
-  edgeScrollTriggerMargin: 50,
+  edgeScrollTriggerMargin: 80,
   edgeScrollSpeed: 0.35,
   edgeScrollTriggerMode: "top_left_corner",
   remnantClassName: "remnant",
