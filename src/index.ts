@@ -150,7 +150,6 @@ export default function (listenerElement: HTMLElement, opt: Options = {}) {
     // first move
     if (store.movedCount === 0) {
       // check if min displacement exceeded.
-      console.log(opt.minDisplacement);
       if (opt.minDisplacement) {
         const x2 = Math.pow(move.x, 2);
         const y2 = Math.pow(move.y, 2);
@@ -184,7 +183,7 @@ export default function (listenerElement: HTMLElement, opt: Options = {}) {
           width: `${Math.ceil(size.width)}px`,
           height: `${Math.ceil(size.height)}px`,
           zIndex: 9999,
-          opacity: 0.8,
+          opacity: opt.opacity,
           position: "fixed",
           left: initialPosition.x + "px",
           top: initialPosition.y + "px",
@@ -311,6 +310,7 @@ export const defaultOptions = {
   edgeScrollSpeed: 0.35,
   edgeScrollTriggerMode: "top_left_corner",
   remnantClassName: "remnant",
+  opacity: 0.8,
 };
 
 export interface Options extends Partial<typeof defaultOptions> {
@@ -334,6 +334,7 @@ export interface Options extends Partial<typeof defaultOptions> {
   edgeScrollTriggerMargin?: number;
   edgeScrollSpeed?: number;
   edgeScrollTriggerMode?: "top_left_corner" | "mouse";
+  opacity?: number;
   // native event hooks
   onmousedown?: (e: MouseEvent) => void;
   onmousemove?: (e: MouseEvent) => void;

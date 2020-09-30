@@ -15,6 +15,7 @@ export declare const defaultOptions: {
     edgeScrollSpeed: number;
     edgeScrollTriggerMode: string;
     remnantClassName: string;
+    opacity: number;
 };
 export interface Options extends Partial<typeof defaultOptions> {
     triggerClassName?: string | string[];
@@ -29,6 +30,7 @@ export interface Options extends Partial<typeof defaultOptions> {
     edgeScrollTriggerMargin?: number;
     edgeScrollSpeed?: number;
     edgeScrollTriggerMode?: "top_left_corner" | "mouse";
+    opacity?: number;
     onmousedown?: (e: MouseEvent) => void;
     onmousemove?: (e: MouseEvent) => void;
     onmouseup?: (e: MouseEvent) => void;

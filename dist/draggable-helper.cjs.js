@@ -306,8 +306,6 @@ function index (listenerElement) {
 
     if (store.movedCount === 0) {
       // check if min displacement exceeded.
-      console.log(opt.minDisplacement);
-
       if (opt.minDisplacement) {
         var x2 = Math.pow(move.x, 2);
         var y2 = Math.pow(move.y, 2);
@@ -343,7 +341,7 @@ function index (listenerElement) {
           width: "".concat(Math.ceil(size.width), "px"),
           height: "".concat(Math.ceil(size.height), "px"),
           zIndex: 9999,
-          opacity: 0.8,
+          opacity: opt.opacity,
           position: "fixed",
           left: initialPosition.x + "px",
           top: initialPosition.y + "px",
@@ -495,7 +493,8 @@ var defaultOptions = {
   edgeScrollTriggerMargin: 80,
   edgeScrollSpeed: 0.35,
   edgeScrollTriggerMode: "top_left_corner",
-  remnantClassName: "remnant"
+  remnantClassName: "remnant",
+  opacity: 0.8
 };
 // Info after event triggered. Created when mousedown or touchstart, destroied after mouseup or touchend.
 var initialStore = {
